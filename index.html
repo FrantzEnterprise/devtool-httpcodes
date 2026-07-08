@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HTTP Status Code Reference — Frantz DevTool Suite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#282a36;--bg2:#21222c;--surface:#44475a;--surface2:#383a4a;--text:#f8f8f2;--text2:#bd93f9;--muted:#6272a4;--accent:#bd93f9;--accent2:#ff79c6;--green:#50fa7b;--orange:#ffb86c;--red:#ff5555;--cyan:#8be9fd;--gold:#f1fa8c;--border:#44475a;--radius:10px;--font:'Inter',sans-serif;--mono:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--surface);border-radius:3px}
+.app{max-width:840px;margin:0 auto;padding:54px 12px 30px}
+.top{position:fixed;top:0;left:0;right:0;height:44px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;z-index:100;gap:8px}
+.top .brand{font-weight:700;font-size:.75rem;display:flex;align-items:center;gap:4px;flex-shrink:0}
+.top .brand span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.top .links{margin-left:auto;display:flex;gap:4px}
+.top .links a{text-decoration:none;font-size:.5rem;padding:3px 7px;border-radius:4px;color:var(--muted)}
+.top .links a:hover{color:var(--text);background:var(--surface)}
+.tier{font-size:.5rem;padding:2px 8px;border-radius:8px;cursor:pointer;background:#50fa7b20;color:var(--green);font-weight:600}
+h1{font-size:1.1rem;color:var(--text2);margin-bottom:2px;display:flex;align-items:center;gap:6px}
+.sub{font-size:.65rem;color:var(--muted);margin-bottom:8px}
+.search-bar{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;align-items:center}
+.search-bar input{padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.7rem;font-family:var(--mono);flex:1;min-width:150px}
+.search-bar input::placeholder{color:var(--muted);opacity:.5}
+.search-bar input:focus{outline:none;border-color:var(--accent)}
+.filter-group{display:flex;gap:3px;flex-wrap:wrap}
+.filter-btn{padding:4px 10px;border-radius:15px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:.55rem;cursor:pointer;transition:all .2s}
+.filter-btn.active{background:var(--surface2);border-color:var(--accent);color:var(--accent)}
+.filter-btn:hover{border-color:var(--accent)}
+.stats{display:flex;gap:10px;margin-bottom:8px;font-size:.55rem;color:var(--muted)}
+.stats span{background:var(--surface);padding:2px 8px;border-radius:10px}
+.code-list{display:flex;flex-direction:column;gap:2px;margin-bottom:12px}
+.code-row{display:flex;align-items:center;padding:4px 8px;border-radius:6px;background:var(--bg);cursor:pointer;transition:all .15s;gap:8px}
+.code-row:hover{background:var(--surface2)}
+.code-row .code{font-family:var(--mono);font-size:.75rem;font-weight:700;min-width:42px;text-align:right}
+.code-row .code.info{color:var(--cyan)}
+.code-row .code.success{color:var(--green)}
+.code-row .code.redirect{color:var(--gold)}
+.code-row .code.client{color:var(--orange)}
+.code-row .code.server{color:var(--red)}
+.code-row .title{flex:1;font-size:.75rem}
+.code-row .desc{font-size:.58rem;color:var(--muted);flex:1;min-width:0}
+.code-row .arrow{color:var(--muted);font-size:.5rem;opacity:.5}
+.detail-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:10px;display:none}
+.detail-panel.show{display:block}
+.detail-panel .head{display:flex;justify-content:space-between;margin-bottom:6px}
+.detail-panel .head .code-lg{font-family:var(--mono);font-size:1.1rem;font-weight:800}
+.detail-panel .head .code-lg.info{color:var(--cyan)}
+.detail-panel .head .code-lg.success{color:var(--green)}
+.detail-panel .head .code-lg.redirect{color:var(--gold)}
+.detail-panel .head .code-lg.client{color:var(--orange)}
+.detail-panel .head .code-lg.server{color:var(--red)}
+.detail-panel .head .title-lg{font-size:.85rem;color:var(--text2)}
+.detail-panel .body{margin-top:6px}
+.detail-panel .body .row{display:flex;gap:6px;font-size:.68rem;margin-bottom:4px;line-height:1.5}
+.detail-panel .body .row .label{color:var(--muted);min-width:70px;flex-shrink:0}
+.detail-panel .body .row .val{color:var(--text)}
+.detail-panel .body .tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.detail-panel .body .tags span{padding:2px 7px;border-radius:10px;font-size:.5rem;font-weight:600}
+.tag-1xx{background:var(--cyan);color:var(--bg)}
+.tag-2xx{background:var(--green);color:var(--bg)}
+.tag-3xx{background:var(--gold);color:var(--bg)}
+.tag-4xx{background:var(--orange);color:var(--bg)}
+.tag-5xx{background:var(--red);color:var(--bg)}
+.cache-tip{background:var(--surface);border-radius:6px;padding:6px 10px;margin-top:8px;font-size:.6rem;color:var(--muted)}
+footer{text-align:center;padding:14px;font-size:.55rem;color:var(--muted);border-top:1px solid var(--border);margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--accent)}
+@media(max-width:500px){.code-row .desc{display:none}}
+</style>
+</head><body>
+<div class="top">
+<div class="brand">🌐 <span>HTTP Codes</span></div>
+<div class="links">
+<a href="https://frantzenterprise.github.io/devtool-suite/">Hub</a>
+<a href="https://frantzenterprise.github.io/devtool-suite/pricing.html">Pricing</a>
+</div>
+<span class="tier" id="tierBadge" onclick="cycleTier()">🆓 Free</span>
+</div>
+<div class="app">
+<h1>🌐 HTTP Status Code Reference</h1>
+<p class="sub">Search, filter, and inspect every HTTP status code. RFC 9110 compliant. All in your browser.</p>
+
+<div class="search-bar">
+<input type="text" id="searchInput" placeholder="Search code, name, or description..." oninput="filter()" spellcheck="false">
+<div class="filter-group" id="filterGroup">
+<button class="filter-btn active" data-filter="all" onclick="setFilter('all')">All</button>
+<button class="filter-btn" data-filter="1xx" onclick="setFilter('1xx')">1xx Info</button>
+<button class="filter-btn" data-filter="2xx" onclick="setFilter('2xx')">2xx Success</button>
+<button class="filter-btn" data-filter="3xx" onclick="setFilter('3xx')">3xx Redirect</button>
+<button class="filter-btn" data-filter="4xx" onclick="setFilter('4xx')">4xx Client</button>
+<button class="filter-btn" data-filter="5xx" onclick="setFilter('5xx')">5xx Server</button>
+</div>
+</div>
+
+<div class="stats" id="stats"></div>
+
+<div id="codeList" class="code-list"></div>
+
+<div class="detail-panel" id="detailPanel">
+<div class="head">
+<div><span class="code-lg" id="detailCode"></span></div>
+<div><span class="title-lg" id="detailTitle"></span></div>
+</div>
+<div class="body" id="detailBody"></div>
+</div>
+</div>
+
+<footer>
+<a href="https://frantzenterprise.github.io/devtool-suite/">Hub</a> ·
+<a href="https://frantzenterprise.github.io/devtool-suite/pricing.html">Pricing</a> ·
+<a href="https://frantzenterprise.github.io/devtool-suite/privacy.html">Privacy</a> ·
+<a href="https://frantzenterprise.github.io/devtool-suite/terms.html">Terms</a> ·
+⚡ Powered by Frantz Enterprise
+</footer>
+
+<script>
+let tier='free', currentFilter='all', codes=[]
+
+const HTTP_CODES=[
+{code:100,name:'Continue',desc:'Server received headers, client should continue.',type:'1xx',rfc:'RFC 9110 §15.2.1',httpx:true},
+{code:101,name:'Switching Protocols',desc:'Server is switching protocols (e.g., WebSocket upgrade).',type:'1xx',rfc:'RFC 9110 §15.2.2',httpx:true},
+{code:102,name:'Processing',desc:'Server received and is processing request (WebDAV).',type:'1xx',rfc:'RFC 2518 §10.1',httpx:false},
+{code:103,name:'Early Hints',desc:'Server hints at resources to preload before final response.',type:'1xx',rfc:'RFC 8297',httpx:false},
+{code:200,name:'OK',desc:'Request succeeded. Meaning depends on HTTP method used.',type:'2xx',rfc:'RFC 9110 §15.3.1',httpx:true},
+{code:201,name:'Created',desc:'Request succeeded and a new resource was created (typically POST/PUT).',type:'2xx',rfc:'RFC 9110 §15.3.2',httpx:true},
+{code:202,name:'Accepted',desc:'Request accepted for processing but not yet completed.',type:'2xx',rfc:'RFC 9110 §15.3.3',httpx:true},
+{code:203,name:'Non-Authoritative Info',desc:'Response modified by proxy — may differ from origin server.',type:'2xx',rfc:'RFC 9110 §15.3.4',httpx:true},
+{code:204,name:'No Content',desc:'Request succeeded but no content to return (e.g., DELETE).',type:'2xx',rfc:'RFC 9110 §15.3.5',httpx:true},
+{code:205,name:'Reset Content',desc:'Tells client to reset the document view.',type:'2xx',rfc:'RFC 9110 §15.3.6',httpx:true},
+{code:206,name:'Partial Content',desc:'Server delivers only part of the resource (Range header).',type:'2xx',rfc:'RFC 9110 §15.3.7',httpx:true},
+{code:207,name:'Multi-Status',desc:'Multiple status codes for multiple operations (WebDAV).',type:'2xx',rfc:'RFC 4918 §11.1',httpx:false},
+{code:300,name:'Multiple Choices',desc:'Multiple representations of the resource. Client chooses.',type:'3xx',rfc:'RFC 9110 §15.4.1',httpx:true},
+{code:301,name:'Moved Permanently',desc:'Resource has a new permanent URL. Redirect future requests.',type:'3xx',rfc:'RFC 9110 §15.4.2',httpx:true},
+{code:302,name:'Found',desc:'Resource temporarily at a different URL.',type:'3xx',rfc:'RFC 9110 §15.4.3',httpx:true},
+{code:303,name:'See Other',desc:'Redirect to another URL via GET (POST→GET).',type:'3xx',rfc:'RFC 9110 §15.4.4',httpx:true},
+{code:304,name:'Not Modified',desc:'Cached version is still valid. Use local copy.',type:'3xx',rfc:'RFC 9110 §15.4.5',httpx:true},
+{code:305,name:'Use Proxy',desc:'Resource must be accessed through specified proxy (deprecated).',type:'3xx',rfc:'RFC 9110 §15.4.6',httpx:false},
+{code:307,name:'Temporary Redirect',desc:'Temporary redirect. Repeat request to new URL with same method.',type:'3xx',rfc:'RFC 9110 §15.4.8',httpx:true},
+{code:308,name:'Permanent Redirect',desc:'Permanent redirect. Repeat requests to new URL with same method.',type:'3xx',rfc:'RFC 9110 §15.4.9',httpx:true},
+{code:400,name:'Bad Request',desc:'Server cannot process request due to client error (malformed syntax, etc.).',type:'4xx',rfc:'RFC 9110 §15.5.1',httpx:true},
+{code:401,name:'Unauthorized',desc:'Authentication is required and has failed or not been provided.',type:'4xx',rfc:'RFC 9110 §15.5.2',httpx:true},
+{code:402,name:'Payment Required',desc:'Reserved for future use. Originally for digital payment systems.',type:'4xx',rfc:'RFC 9110 §15.5.3',httpx:false},
+{code:403,name:'Forbidden',desc:'Client authenticated but does not have permission.',type:'4xx',rfc:'RFC 9110 §15.5.4',httpx:true},
+{code:404,name:'Not Found',desc:'Resource not found. Most common HTTP error.',type:'4xx',rfc:'RFC 9110 §15.5.5',httpx:true},
+{code:405,name:'Method Not Allowed',desc:'HTTP method not supported for this resource.',type:'4xx',rfc:'RFC 9110 §15.5.6',httpx:true},
+{code:406,name:'Not Acceptable',desc:'Server cannot produce response matching Accept headers.',type:'4xx',rfc:'RFC 9110 §15.5.7',httpx:true},
+{code:407,name:'Proxy Auth Required',desc:'Proxy authentication required.',type:'4xx',rfc:'RFC 9110 §15.5.8',httpx:true},
+{code:408,name:'Request Timeout',desc:'Server timed out waiting for request.',type:'4xx',rfc:'RFC 9110 §15.5.9',httpx:true},
+{code:409,name:'Conflict',desc:'Request conflicts with current state of the resource.',type:'4xx',rfc:'RFC 9110 §15.5.10',httpx:true},
+{code:410,name:'Gone',desc:'Resource permanently deleted — no forwarding URL.',type:'4xx',rfc:'RFC 9110 §15.5.11',httpx:true},
+{code:411,name:'Length Required',desc:'Content-Length header required.',type:'4xx',rfc:'RFC 9110 §15.5.12',httpx:true},
+{code:412,name:'Precondition Failed',desc:'Server does not meet preconditions in request headers.',type:'4xx',rfc:'RFC 9110 §15.5.13',httpx:true},
+{code:413,name:'Payload Too Large',desc:'Request entity larger than server allows.',type:'4xx',rfc:'RFC 9110 §15.5.14',httpx:true},
+{code:414,name:'URI Too Long',desc:'URI requested is too long for server to process.',type:'4xx',rfc:'RFC 9110 §15.5.15',httpx:true},
+{code:415,name:'Unsupported Media Type',desc:'Media type in Content-Type not supported.',type:'4xx',rfc:'RFC 9110 §15.5.16',httpx:true},
+{code:416,name:'Range Not Satisfiable',desc:'Range specified in Range header cannot be fulfilled.',type:'4xx',rfc:'RFC 9110 §15.5.17',httpx:true},
+{code:417,name:'Expectation Failed',desc:'Server cannot meet Expect header requirement.',type:'4xx',rfc:'RFC 9110 §15.5.18',httpx:true},
+{code:418,name:"I'm a Teapot",desc:'April Fools joke. Server refuses to brew coffee in a teapot.',type:'4xx',rfc:'RFC 2324 §2.3.2',httpx:false},
+{code:421,name:'Misdirected Request',desc:'Request sent to server that cannot produce response.',type:'4xx',rfc:'RFC 9110 §15.5.20',httpx:true},
+{code:422,name:'Unprocessable Entity',desc:'Syntax valid but semantically invalid (e.g., validation errors).',type:'4xx',rfc:'RFC 9110 §15.5.21',httpx:true},
+{code:423,name:'Locked',desc:'Resource is locked (WebDAV).',type:'4xx',rfc:'RFC 4918 §11.3',httpx:false},
+{code:424,name:'Failed Dependency',desc:'Request failed because a previous request failed (WebDAV).',type:'4xx',rfc:'RFC 4918 §11.4',httpx:false},
+{code:425,name:'Too Early',desc:'Server refuses to process replay-risky request.',type:'4xx',rfc:'RFC 8470',httpx:false},
+{code:426,name:'Upgrade Required',desc:'Client should switch to a different protocol.',type:'4xx',rfc:'RFC 9110 §15.5.22',httpx:true},
+{code:428,name:'Precondition Required',desc:'Server requires conditional request headers.',type:'4xx',rfc:'RFC 6585 §3',httpx:true},
+{code:429,name:'Too Many Requests',desc:'Rate limited. Slow down and retry after X seconds.',type:'4xx',rfc:'RFC 6585 §4',httpx:true},
+{code:431,name:'Header Fields Too Large',desc:'Request header fields are too large.',type:'4xx',rfc:'RFC 6585 §5',httpx:true},
+{code:451,name:'Unavailable For Legal Reasons',desc:'Resource blocked due to legal demands.',type:'4xx',rfc:'RFC 7725',httpx:true},
+{code:500,name:'Internal Server Error',desc:'Generic server error — something went wrong on the server.',type:'5xx',rfc:'RFC 9110 §15.6.1',httpx:true},
+{code:501,name:'Not Implemented',desc:'Server does not support the requested functionality.',type:'5xx',rfc:'RFC 9110 §15.6.2',httpx:true},
+{code:502,name:'Bad Gateway',desc:'Upstream server returned an invalid response.',type:'5xx',rfc:'RFC 9110 §15.6.3',httpx:true},
+{code:503,name:'Service Unavailable',desc:'Server temporarily overloaded or under maintenance.',type:'5xx',rfc:'RFC 9110 §15.6.4',httpx:true},
+{code:504,name:'Gateway Timeout',desc:'Upstream server did not respond in time.',type:'5xx',rfc:'RFC 9110 §15.6.5',httpx:true},
+{code:505,name:'HTTP Version Not Supported',desc:'HTTP protocol version used in request not supported.',type:'5xx',rfc:'RFC 9110 §15.6.6',httpx:true},
+{code:506,name:'Variant Also Negotiates',desc:'Server configuration error in content negotiation.',type:'5xx',rfc:'RFC 2295 §8.1',httpx:false},
+{code:507,name:'Insufficient Storage',desc:'Server cannot store representation (WebDAV).',type:'5xx',rfc:'RFC 4918 §11.5',httpx:false},
+{code:508,name:'Loop Detected',desc:'Infinite loop processing request (WebDAV).',type:'5xx',rfc:'RFC 5842 §7.2',httpx:false},
+{code:510,name:'Not Extended',desc:'Further extensions to request required.',type:'5xx',rfc:'RFC 2774 §7',httpx:false},
+{code:511,name:'Network Auth Required',desc:'Network authentication required to access resource.',type:'5xx',rfc:'RFC 6585 §6',httpx:true}
+]
+
+function init(){
+codes=HTTP_CODES
+render()
+document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Escape'){e.target.value='';filter()}})
+}
+
+function render(){
+const search=document.getElementById('searchInput').value.toLowerCase()
+const flt=currentFilter
+let filtered=codes.filter(c=>{
+if(flt!=='all'&&c.type!==flt)return false
+if(search){
+const q=search
+const matchCode=c.code.toString().includes(q)
+const matchName=c.name.toLowerCase().includes(q)
+const matchDesc=c.desc.toLowerCase().includes(q)
+if(!matchCode&&!matchName&&!matchDesc)return false
+}
+return true
+})
+
+const list=document.getElementById('codeList')
+list.innerHTML=filtered.map(c=>{
+const cls=c.type==='1xx'?'info':c.type==='2xx'?'success':c.type==='3xx'?'redirect':c.type==='4xx'?'client':'server'
+return `<div class="code-row" onclick="showDetail(${c.code})">
+<span class="code ${cls}">${c.code}</span>
+<span class="title">${c.name}</span>
+<span class="desc">${c.desc}</span>
+<span class="arrow">›</span>
+</div>`
+}).join('')
+
+document.getElementById('stats').innerHTML=`<span>Showing ${filtered.length} of ${codes.length} codes</span>`
+}
+
+function setFilter(f){
+currentFilter=f
+document.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.filter===f))
+render()
+}
+
+function filter(){render()}
+
+function showDetail(codeVal){
+const c=codes.find(x=>x.code===codeVal)
+if(!c)return
+const panel=document.getElementById('detailPanel')
+panel.classList.add('show')
+const cls=c.type==='1xx'?'info':c.type==='2xx'?'success':c.type==='3xx'?'redirect':c.type==='4xx'?'client':'server'
+document.getElementById('detailCode').textContent=c.code
+document.getElementById('detailCode').className='code-lg '+cls
+document.getElementById('detailTitle').textContent=c.name
+
+const tags=c.type.split('x')[0]+'xx'
+document.getElementById('detailBody').innerHTML=`
+<div class="row"><span class="label">Description</span><span class="val">${c.desc}</span></div>
+<div class="row"><span class="label">Category</span><span class="val">${c.type.replace('x','xx').replace('x','xx')}</span></div>
+<div class="row"><span class="label">RFC</span><span class="val">${c.rfc}</span></div>
+<div class="row"><span class="label">HTTPX</span><span class="val">${c.httpx?'✅ Common in practice':'ℹ️ Less common / legacy'}</span></div>
+<div class="tags"><span class="tag-${tags}">${tags}</span></div>
+${c.code===304?'<div class="cache-tip">💡 Tip: 304 lets browsers use cached resources, saving bandwidth. Use ETag/Last-Modified headers to enable it.</div>':''}
+${c.code===429?'<div class="cache-tip">💡 Tip: Include a Retry-After header so clients know how long to wait.</div>':''}
+${c.code===503?'<div class="cache-tip">💡 Tip: Include a Retry-After header. Search engines respect this for crawl delays.</div>':''}
+`
+
+panel.scrollIntoView({behavior:'smooth',block:'nearest'})
+}
+
+function cycleTier(){
+const tiers=['free','pro','team'];const i=tiers.indexOf(tier);tier=tiers[(i+1)%3]
+const b=document.getElementById('tierBadge')
+const m={free:{t:'🆓 Free',c:'#50fa7b'},pro:{t:'⚡ Pro',c:'#ff79c6'},team:{t:'🏢 Team',c:'#ffb86c'}}
+b.textContent=m[tier].t;b.style.color=m[tier].c;b.style.background=m[tier].c+'20'
+}
+
+document.addEventListener('DOMContentLoaded',init)
+</script>
+</body></html>
